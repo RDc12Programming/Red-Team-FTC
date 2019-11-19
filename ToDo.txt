@@ -1,0 +1,11 @@
+- pull updated code off the RC and alter current code based on modifications
+  - Check mecanum directions then also check against new setup
+  - Check arm positions (reversed from previous code)
+- Work on sensor input
+  - Talk to green?
+- Learn to use motor.setTargetPosition();
+- Pull autonomous code from RC and fix it
+- Fix strafe rotation in all OpModes
+- Document Autonomous code
+- Reconfigure on DS for rebuild bot
+- Reprogram mecanum to account for new motor directions
