@@ -32,17 +32,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode; // Something to do with the RC code? It's required...
 
 // To anyone wanting to mess with these, don't. It does weird stuff
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;          imports "LinearOpMode", Required for a linear OpMode    | Used
-import com.qualcomm.robotcore.hardware.Servo;                         imports "Servo", Required for servos                    | Used
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;                imports "TeleOp", Required for TeleOp OpModes           | Used
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;              imports "Disabled", OnBot says it's required            | Maybe used?
-import com.qualcomm.robotcore.hardware.DcMotor;                       imports "DcMotor",  Required to control DcMotors        | Used
-import com.qualcomm.robotcore.hardware.DcMotorSimple;                 imports "DcMotorSimple", also required for DcMotors     | Used
-import com.qualcomm.robotcore.util.ElapsedTime;                       imports "ElapsedTime" utility, not used as of right now | Not used
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;          //imports "LinearOpMode", Required for a linear OpMode    | Used
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;                         //imports "Servo", Required for servos                    | Used
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;                //imports "TeleOp", Required for TeleOp OpModes           | Used
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;              //imports "Disabled", OnBot says it's required            | Maybe used?
+import com.qualcomm.robotcore.hardware.DcMotor;                       //imports "DcMotor",  Required to control DcMotors        | Used
+import com.qualcomm.robotcore.hardware.DcMotorSimple;                 //imports "DcMotorSimple", also required for DcMotors     | Used
+import com.qualcomm.robotcore.util.ElapsedTime;                       //imports "ElapsedTime" utility, not used as of right now | Not used
 
 @TeleOp
 
-public class TeleOp extends LinearOpMode {
+public class TeleOpFinal extends LinearOpMode {
 
         // Define Motors
     private ElapsedTime runtime     = new ElapsedTime();
@@ -73,20 +74,20 @@ public class TeleOp extends LinearOpMode {
         telemetry.update(); // Update telemetry statuses
         
             // Map DcMotors and Servos                                                             For Config Reference:
-        leftFrontDrive  = hardwareMap.dcMotor.get("leftFrontDrive" ); // Left Front Drive Motor   "leftFrontDrive"  _____ Hub Motor Port _ 
-        leftRearDrive   = hardwareMap.dcMotor.get("leftRearDrive"  ); // Left Back Drive Motor    "leftRearDrive"   _____ Hub Motor Port _
-        rightFrontDrive = hardwareMap.dcMotor.get("rightFrontDrive"); // Right Front Drive Motor  "rightFrontDrive" _____ Hub Motor Port _
-        rightRearDrive  = hardwareMap.dcMotor.get("rightRearDrive" ); // Right Back Drive Motor   "rightRearDrive"  _____ Hub Motor Port _
-        intakeRight     = hardwareMap.dcMotor.get("intakeRight"    ); // Right Intake Motor       "intakeRight"     _____ Hub Motor Port _
+        leftFrontDrive  = hardwareMap.dcMotor.get("leftFrontDrive" ); // Left Front Drive Motor   "leftFrontDrive"  _Con_ Hub Motor Port 0 
+        leftRearDrive   = hardwareMap.dcMotor.get("leftRearDrive"  ); // Left Back Drive Motor    "leftRearDrive"   _Con_ Hub Motor Port 1
+        rightFrontDrive = hardwareMap.dcMotor.get("rightFrontDrive"); // Right Front Drive Motor  "rightFrontDrive" _Exp_ Hub Motor Port 1
+        rightRearDrive  = hardwareMap.dcMotor.get("rightRearDrive" ); // Right Back Drive Motor   "rightRearDrive"  _Exp_ Hub Motor Port 0
+        /*intakeRight     = hardwareMap.dcMotor.get("intakeRight"    ); // Right Intake Motor       "intakeRight"     _____ Hub Motor Port _
         intakeLeft      = hardwareMap.dcMotor.get("intakeLeft"     ); // Left Intake Motor        "intakeLeft"      _____ Hub Motor Port _
-	leftGrab        = hardwareMap.servo.get(  "leftGrab"       ); // Left Plate Servo         "leftGrab"        _____ Hub Servo Port _
-	rightGrab       = hardwareMap.servo.get(  "rightGrab"      ); // Right Plate Servo        "rightGrab"       _____ Hub Servo Port _
-        
+        leftGrab        = hardwareMap.servo.get(  "leftGrab"       ); // Left Plate Servo         "leftGrab"        _____ Hub Servo Port _
+        rightGrab       = hardwareMap.servo.get(  "rightGrab"      ); // Right Plate Servo        "rightGrab"       _____ Hub Servo Port _
+        */
             // Setup Motor Directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE ); // < I believe this should be forward but I'm not sure
-        leftRearDrive.setDirection( DcMotor.Direction.FORWARD );
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); // < I believe this might should also be forward
-        rightRearDrive.setDirection( DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD );
+        leftRearDrive.setDirection( DcMotor.Direction.REVERSE );
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightRearDrive.setDirection( DcMotor.Direction.REVERSE);
        
             // Set Motor Modes
         leftFrontDrive.setMode( DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for lf
@@ -149,23 +150,23 @@ public class TeleOp extends LinearOpMode {
         if( gamepad1.left_stick_x  > 0 ||  gamepad1.left_stick_x  < 0){
             X2 = gamepad1.left_stick_x; // Strafe (Left Stick X axis)
         }
-		
-		if(gamepad1.a){
-			plates = true; // Move arms down
-		}
-		
-		if(gamepad1.b){
-			plates = false; // Move arms up
-		}
         
-		if(plates){
-			 leftGrab.setPosition(1); // Might need to swap with below
-			rightGrab.setPosition(0); // Might need to swap with above
-		} else {
-			 leftGrab.setPosition(0); // Might need to swap with below
-			rightGrab.setPosition(1); // Might need to swap with above
-		}
-		 
+        /*if(gamepad1.a){
+            plates = true; // Move arms down
+        }
+        
+        if(gamepad1.b){
+            plates = false; // Move arms up
+        }
+        
+        if(plates){
+             leftGrab.setPosition(1); // Might need to swap with below
+            rightGrab.setPosition(0); // Might need to swap with above
+        } else {
+             leftGrab.setPosition(0); // Might need to swap with below
+            rightGrab.setPosition(1); // Might need to swap with above
+        }*/
+         
         LF += X2; RF += X2; LR += X2; RR += X2; // Strafe Movement
         LF += Y2; RF -= Y2; LR -= Y2; RR += Y2; // Forward / Backward Movement
         LF += X1; RF += X1; LR -= X1; RR -= X1; // Rotate Left / Right
@@ -180,15 +181,15 @@ public class TeleOp extends LinearOpMode {
         rightFrontDrive.setPower(RF); // set rf power
         rightRearDrive.setPower( RR); // set rr power
         
-        intakeRight.setPower(-tgtIntakePower); // reversed with below?
-        intakeLeft.setPower(  tgtIntakePower);
+        //intakeRight.setPower(-tgtIntakePower); // reversed with below?
+        //intakeLeft.setPower(  tgtIntakePower);
         
         i++; // inrease tick counter
-	
+    
         // Set Telemetry Data
-        telemetry.addData("tgt Intake Power",    tgtIntakePower    );
+        //telemetry.addData("tgt Intake Power",    tgtIntakePower    );
         telemetry.addData("Tick Num",            i                 );
-	telemetry.addData("",                    "All Systems Good");
+        telemetry.addData("",                    "All Systems Good");
         }
     }
 }
