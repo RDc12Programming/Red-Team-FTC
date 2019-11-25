@@ -45,7 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;                       //imports 
 
 @Autonomous
 
-public class FindRedLine extends LinearOpMode {
+public class FindBlueLine extends LinearOpMode {
 
         // Define Motors
     private ElapsedTime runtime     = new ElapsedTime();
@@ -207,15 +207,23 @@ public class FindRedLine extends LinearOpMode {
         } else if(colors.blue > colors.red && colors.blue > colors.green){
             // Blue Line
         } else if(colors.green > colors.red && colors.green > colors.red){
-            // Green Line?
+            // Tiles
         }
         
-        telemetry.addData("Tick Num",            i                 );
+        telemetry.addData("Tick Num",            i                  );
         telemetry.addData("Blue", colors.blue > colors.red && colors.blue > colors.green);
         telemetry.addData("Red", colors.red > colors.blue && colors.red > colors.green);
         telemetry.addData("Green", colors.green > colors.red && colors.green > colors.red);
-        telemetry.addData("Y2", Y2);
-        telemetry.addData("",                    "All Systems Good");
+        telemetry.addData("Y2",                                  Y2 );
+        telemetry.addData("LF",                                  LF );
+        telemetry.addData("LR",                                  LR );
+        telemetry.addData("RF",                                  RF );
+        telemetry.addData("RR",                                  RR );
+        telemetry.addData("LF Power",     leftFrontDrive.getPower() );
+        telemetry.addData("LR Power",     leftRearDrive.getPower()  );
+        telemetry.addData("RF Power",     rightFrontDrive.getPower());
+        telemetry.addData("RR Power",     rightRearDrive.getPower() );
+        telemetry.addData("",                    "All Systems Good" );
      telemetry.addLine()
               .addData("a", "%.3f", colors.alpha)
               .addData("r", "%.3f", colors.red)
