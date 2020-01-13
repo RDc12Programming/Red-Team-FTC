@@ -1,9 +1,9 @@
 /*
 Copyright 2019 FIRST Tech Challenge Team 4891 (PHS Team RED)
           __    ___    ________    ___________     _____
-         / /   /   |  /        |  / _____     |  _/     | 
-        / /   /   /  / _____  /  / /    /    /  /      / 
-       / /   /   /  / /    / /  / /    /    /  /___   / 
+         / /   /   |  /        |  / _____     |  _/     |
+        / /   /   /  / _____  /  / /    /    /  /      /
+       / /   /   /  / /    / /  / /    /    /  /___   /
       / /___/   /  / /    / /  / /____/    /      /  / Prosper High School
      |_____    /  | /____/ /  |______     /      /  /     4891 RED Team
           /   /  / _____  |         /    /      /  /     all three of us
@@ -29,17 +29,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 // This Program is the Final Version of Team 4891's TeleOp for the 2019 FTC Competition season
 // There is a very real possibility that this will be updated as the season progresses
 
-package org.firstinspires.ftc.teamcode; // Something to do with the RC code? It's required...
+package org.firstinspires.ftc.teamcode;
 
 // To anyone wanting to mess with these, don't. It does weird stuff
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;          //imports "LinearOpMode", Required for a linear OpMode    | Used
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;                         //imports "Servo", Required for servos                    | Used
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;                //imports "TeleOp", Required for TeleOp OpModes           | Used
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;              //imports "Disabled", OnBot says it's required            | Maybe used?
-import com.qualcomm.robotcore.hardware.DcMotor;                       //imports "DcMotor",  Required to control DcMotors        | Used
-import com.qualcomm.robotcore.hardware.DcMotorSimple;                 //imports "DcMotorSimple", also required for DcMotors     | Used
-import com.qualcomm.robotcore.util.ElapsedTime;                       //imports "ElapsedTime" utility, not used as of right now | Not used
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 
@@ -52,14 +56,21 @@ public class TeleOpFinal extends LinearOpMode {
     private DcMotor rightRearDrive  = null; // Back  Right Wheel
     private DcMotor rightFrontDrive = null; // Front Right Wheel
     private DcMotor intakeRight     = null; // Right Intake
+    private DcMotor intakeRightBack = null; // ''
     private DcMotor intakeLeft      = null; // Left  Intake
+    private DcMotor intakeLeftBack  = null; // ''
     private Servo   leftGrab        = null; // Left  Plate Grabber
     private Servo   rightGrab       = null; // Right Plate Grabber
-    
+    private Servo   capstone        = null; // Capstone holder
+    private NormalizedColorSensor colorSensor;
+    private NormalizedColorSensor colorSensor2;
+    private NormalizedColorSensor blockType;
+    private DistanceSensor blockDist;
+   
         // Define Mecanum values
     double RF; double LF; double RR; double LR; // Drive Speeds
     double X1;            double X2; double Y2; // Joystick Values
-    
+   
         // Variables
     double  tgtIntakePower     =     0; // Intake power variable
     boolean plates             = false; // Whether or not the build plate movers are up or down
@@ -72,58 +83,65 @@ public class TeleOpFinal extends LinearOpMode {
             // Set Initialized status
         telemetry.addData("Status", "Initialized");
         telemetry.update(); // Update telemetry statuses
-        
+       
             // Map DcMotors and Servos                                                             For Config Reference:
-        leftFrontDrive  = hardwareMap.dcMotor.get("leftFrontDrive" ); // Left Front Drive Motor   "leftFrontDrive"  _Con_ Hub Motor Port 0 
+        leftFrontDrive  = hardwareMap.dcMotor.get("leftFrontDrive" ); // Left Front Drive Motor   "leftFrontDrive"  _Con_ Hub Motor Port 0
         leftRearDrive   = hardwareMap.dcMotor.get("leftRearDrive"  ); // Left Back Drive Motor    "leftRearDrive"   _Con_ Hub Motor Port 1
         rightFrontDrive = hardwareMap.dcMotor.get("rightFrontDrive"); // Right Front Drive Motor  "rightFrontDrive" _Exp_ Hub Motor Port 1
         rightRearDrive  = hardwareMap.dcMotor.get("rightRearDrive" ); // Right Back Drive Motor   "rightRearDrive"  _Exp_ Hub Motor Port 0
-        /*intakeRight     = hardwareMap.dcMotor.get("intakeRight"    ); // Right Intake Motor       "intakeRight"     _____ Hub Motor Port _
+        intakeRight     = hardwareMap.dcMotor.get("intakeRight"    ); // Right Intake Motor       "intakeRight"     _____ Hub Motor Port _
+        intakeRightBack = hardwareMap.dcMotor.get("intakeRightBack"); //         ''               "intakeRightBack" _____ Hub Motor Port _
         intakeLeft      = hardwareMap.dcMotor.get("intakeLeft"     ); // Left Intake Motor        "intakeLeft"      _____ Hub Motor Port _
-        leftGrab        = hardwareMap.servo.get(  "leftGrab"       ); // Left Plate Servo         "leftGrab"        _____ Hub Servo Port _
-        rightGrab       = hardwareMap.servo.get(  "rightGrab"      ); // Right Plate Servo        "rightGrab"       _____ Hub Servo Port _
-        */
+        intakeLeftBack  = hardwareMap.dcMotor.get("intakeLeftBack" ); //         ''               "intakeLeftBack"  _____ Hub Motor Port _
+        leftGrab        = hardwareMap.servo.get(  "leftClamp"      ); // Left Plate Servo         "leftGrab"        _____ Hub Servo Port _
+        rightGrab       = hardwareMap.servo.get(  "rightClamp"     ); // Right Plate Servo        "rightGrab"       _____ Hub Servo Port _
+        capstone        = hardwareMap.servo.get(  "capstone"       ); // Capstone Holder
+        blockType       = hardwareMap.get(NormalizedColorSensor.class, "blockType");
+        colorSensor     = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+        colorSensor2    = hardwareMap.get(NormalizedColorSensor.class, "sensor_color2"); // TODO: Config "sensor_color2"
+        blockDist       = hardwareMap.get(DistanceSensor.class, "block_distance");
+       
             // Setup Motor Directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD );
-        leftRearDrive.setDirection( DcMotor.Direction.REVERSE );
+        leftFrontDrive.setDirection( DcMotor.Direction.FORWARD);
+        leftRearDrive.setDirection(  DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightRearDrive.setDirection( DcMotor.Direction.REVERSE);
+        rightRearDrive.setDirection( DcMotor.Direction.FORWARD);
        
             // Set Motor Modes
-        leftFrontDrive.setMode( DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for lf
-        leftRearDrive.setMode(  DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for lr
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for rf
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for rr
-        
+        leftFrontDrive.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn off encoders for lf so we can move full speed
+        leftRearDrive.setMode(  DcMotor.RunMode.RUN_WITHOUT_ENCODER); // '' for lr
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // '' for rf
+        rightRearDrive.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER); // '' for rr
+       
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
     while (opModeIsActive()) {
+        NormalizedRGBA colors2 = colorSensor2.getNormalizedColors();
+        NormalizedRGBA colors  = colorSensor.getNormalizedColors();
+        NormalizedRGBA block   = blockType.getNormalizedColors();
+       
+        Rev2mDistanceSensor blockDistance = (Rev2mDistanceSensor)blockDist;
+       
         tgtIntakePower = 0;
-        
-        telemetry.addData("Status", "Running"); // Set Status Running
-        telemetry.update();                     // Update Telemetry
-            
-        LF = 0; RF = 0; LR = 0; RR = 0; // Mecanum Reset
-        
-        Y2 = 0;
-        X1 = 0; // Reset Values so we don't move infinitely
-        X2 = 0;
-        
+           
+        LF = 0; RF = 0; LR = 0; RR = 0; // Variable Reset:
+        Y2 = 0; X1 = 0; X2 = 0;         // Reset Values so we don't move infinitely
+       
         if(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0){
             tgtIntakePower = 1; // Intakes inward (Triggers)
         }
-        
+       
         if(gamepad1.right_bumper || gamepad1.left_bumper){
             tgtIntakePower = -1; // Intakes outward (Bumpers)
         }
-            
+           
         if(gamepad1.dpad_up){
             // Slow Forward (DPAD up)
             Y2 = 0.25;
         }
-        
+       
         if(gamepad1.dpad_down){
             // Slow Backward (DPAD down)
             Y2 = -0.25;
@@ -138,58 +156,80 @@ public class TeleOpFinal extends LinearOpMode {
                //Slow Right (DPAD right)
             X2 = 0.25;
        }
-        
+       
         if( gamepad1.right_stick_x > 0 ||  gamepad1.right_stick_x < 0){
             X1 = gamepad1.right_stick_x; // Rotation controls (Right Stick X axis)
         }
-    
+   
         if(-gamepad1.left_stick_y  > 0 || -gamepad1.left_stick_y  < 0){
             Y2 = -gamepad1.left_stick_y; // Forward / Backward controls (Left Stick Y axis)
         }
-    
+   
         if( gamepad1.left_stick_x  > 0 ||  gamepad1.left_stick_x  < 0){
             X2 = gamepad1.left_stick_x; // Strafe (Left Stick X axis)
         }
-        
-        /*if(gamepad1.a){
+       
+        if(gamepad1.a){
             plates = true; // Move arms down
         }
-        
+       
         if(gamepad1.b){
             plates = false; // Move arms up
         }
-        
-        if(plates){
-             leftGrab.setPosition(1); // Might need to swap with below
-            rightGrab.setPosition(0); // Might need to swap with above
+       
+        if(plates){ // Build Plate pulling devices on servos
+             leftGrab.setPosition(1); // Need to trial & error these into shape
+            rightGrab.setPosition(0);
         } else {
-             leftGrab.setPosition(0); // Might need to swap with below
-            rightGrab.setPosition(1); // Might need to swap with above
-        }*/
+             leftGrab.setPosition(0);
+            rightGrab.setPosition(1);
+        }
+
+        if(gamepad1.x){
+            // kick out capstone
+            capstone.setPosition(1); // value is probably wrong
+        }
+
+        if(gamepad1.y){
+            // reset capstone arm
+            capstone.setPosition(0); // value is probably wrong
+        }
          
-        LF += X2; RF += X2; LR += X2; RR += X2; // Strafe Movement
-        LF += Y2; RF -= Y2; LR -= Y2; RR += Y2; // Forward / Backward Movement
-        LF += X1; RF += X1; LR -= X1; RR -= X1; // Rotate Left / Right
-        
+        if(colors.red > colors.blue && colors.red > colors.green){
+            // Red Line
+        } else if(colors.blue > colors.red && colors.blue > colors.green){
+            // Blue Line
+        } else if(colors.green > colors.red && colors.green > colors.red){
+            // Tiles
+        }
+         
+        LF += X2; RF -= X2; LR -= X2; RR += X2; // Strafe Movement             | Good
+        LF += Y2; RF -= Y2; LR += Y2; RR -= Y2; // Forward / Backward Movement | Good
+        LF += X1; RF += X1; LR += X1; RR += X1; // Rotate Left / Right         | Good
+       
         LF = Math.max(-1.0, Math.min(LF, 1.0)); // Make sure the motors don't get set with powers higher than they can handle
         RF = Math.max(-1.0, Math.min(RF, 1.0)); // ''
         LR = Math.max(-1.0, Math.min(LR, 1.0)); // ''
         RR = Math.max(-1.0, Math.min(RR, 1.0)); // ''
-        
+       
         leftFrontDrive.setPower( LF); // set lf power
         leftRearDrive.setPower(  LR); // set lr power
         rightFrontDrive.setPower(RF); // set rf power
         rightRearDrive.setPower( RR); // set rr power
-        
-        //intakeRight.setPower(-tgtIntakePower); // reversed with below?
-        //intakeLeft.setPower(  tgtIntakePower);
-        
+       
+        intakeRight.setPower(     tgtIntakePower);
+        intakeRightBack.setPower( tgtIntakePower);
+        intakeLeft.setPower(     -tgtIntakePower);
+        intakeLeftBack.setPower( -tgtIntakePower);
+       
         i++; // inrease tick counter
-    
+   
         // Set Telemetry Data
-        //telemetry.addData("tgt Intake Power",    tgtIntakePower    );
-        telemetry.addData("Tick Num",            i                 );
-        telemetry.addData("",                    "All Systems Good");
+        telemetry.addData("Tick Num", i); 
+        // That monstrosity below this line detects whether or not it sees a skystone, *as compared to a regular stone*; it has been known to give false positives with the wall and black objects
+        telemetry.addData("Skystone?", !(block.red >= 0.01) && new Double(blockDistance.getDistance(DistanceUnit.INCH)) <= 2 && new Double(blockDistance.getDistance(DistanceUnit.INCH)) >= 0.5 );
+        telemetry.addData("Status", "Running");
+        telemetry.update();
         }
     }
 }

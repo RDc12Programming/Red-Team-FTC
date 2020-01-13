@@ -32,16 +32,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode; // Something to do with the RC code? It's required...
 
 // To anyone wanting to mess with these, don't. It does weird stuff
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;          //imports "LinearOpMode", Required for a linear OpMode    | Used
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;                         //imports "Servo", Required for servos                    | Used
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;              //imports "Disabled", OnBot says it's required            | Maybe used?
-import com.qualcomm.robotcore.hardware.DcMotor;                       //imports "DcMotor",  Required to control DcMotors        | Used
-import com.qualcomm.robotcore.hardware.DcMotorSimple;                 //imports "DcMotorSimple", also required for DcMotors     | Used
-import com.qualcomm.robotcore.util.ElapsedTime;                       //imports "ElapsedTime" utility, not used as of right now | Not used
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;          // imports "LinearOpMode", Required for a linear OpMode    | Used
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;            // imports "Autonomous", used for Auton OpModes            | Used
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;                // imports something for Color Sensors, required           | Used
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;         // imports more color sensor things                        | Used
+import com.qualcomm.robotcore.hardware.Servo;                         // imports "Servo", Required for servos                    | Used
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;              // imports "Disabled", OnBot says it's required            | Maybe used?
+import com.qualcomm.robotcore.hardware.DcMotor;                       // imports "DcMotor",  Required to control DcMotors        | Used
+import com.qualcomm.robotcore.hardware.DcMotorSimple;                 // imports "DcMotorSimple", also required for DcMotors     | Used
+import com.qualcomm.robotcore.util.ElapsedTime;                       // imports "ElapsedTime" utility, not used as of right now | Not used
 
 @Autonomous
 
@@ -91,10 +90,10 @@ public class FindBlueLine extends LinearOpMode {
         rightGrab       = hardwareMap.servo.get(  "rightGrab"      ); // Right Plate Servo        "rightGrab"       _____ Hub Servo Port _
         */
             // Setup Motor Directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD );
-        leftRearDrive.setDirection( DcMotor.Direction.REVERSE );
+        leftFrontDrive.setDirection( DcMotor.Direction.FORWARD);
+        leftRearDrive.setDirection(  DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightRearDrive.setDirection( DcMotor.Direction.REVERSE);
+        rightRearDrive.setDirection( DcMotor.Direction.FORWARD);
        
             // Set Motor Modes
         leftFrontDrive.setMode( DcMotor.RunMode.RUN_USING_ENCODER); // Turn on encoders for lf
@@ -180,8 +179,8 @@ public class FindBlueLine extends LinearOpMode {
             rightGrab.setPosition(1); // Might need to swap with above
         }*/
          
-        LF += X2; RF += X2; LR += X2; RR += X2; // Strafe Movement
-        LF += Y2; RF -= Y2; LR -= Y2; RR += Y2; // Forward / Backward Movement
+        LF += X2; RF -= X2; LR -= X2; RR += X2; // Strafe Movement
+        LF += Y2; RF += Y2; LR += Y2; RR += Y2; // Forward / Backward Movement
         LF += X1; RF += X1; LR -= X1; RR -= X1; // Rotate Left / Right
         
         LF = Math.max(-1.0, Math.min(LF, 1.0)); // Make sure the motors don't get set with powers higher than they can handle
