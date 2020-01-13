@@ -185,16 +185,49 @@ public class TeleOpFinal extends LinearOpMode {
                     }
                     break;
 
-            case 2: 
+            case 2: move("right", 12);
+                    stage++;
                     break;
 
             case 3: if(isSkystone()){
                         stone1 = 1;
                         stage++;
                     } else {
-
+                        move("left", 8);
+                        if(isSkystone()){
+                            stone1 = 2;
+                            stage++;
+                        } else {
+                            move("left", 8);
+                            if(isSkystone()){
+                               stone1 = 3;
+                                stage++;
+                            } else {
+                                move("left", 8);
+                                if(isSkystone()){
+                                    stone1 = 4;
+                                    stage++;
+                                } else {
+                                    move("left", 8);
+                                    if(isSkystone()){
+                                        stone1 = 5;
+                                        stage++;
+                                    } else {
+                                        move("left", 8);
+                                        if(isSkystone()){
+                                            stone1 = 6;
+                                            stage++;
+                                        } else {
+                                            //skystones don't exist
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
+            case 4:
+                        break;
         }
 
         if(colors.red > colors.blue && colors.red > colors.green){
