@@ -178,8 +178,8 @@ public class TeleOpFinal extends LinearOpMode {
         }
        
         if(plates){ // Build Plate pulling devices on servos
-             leftGrab.setPosition(1); // Need to trial & error these into shape
-            rightGrab.setPosition(0);
+            leftGrab.setPosition(1); // Need to trial & error these into shape
+            rightGrab.setPosition(0); 
         } else {
              leftGrab.setPosition(0);
             rightGrab.setPosition(1);

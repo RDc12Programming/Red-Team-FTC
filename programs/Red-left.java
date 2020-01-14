@@ -79,7 +79,7 @@ public class TeleOpFinal extends LinearOpMode {
 
     int i = 0; // Tick counter for reference
 
-    int stone1, stone2;
+    int stone1 = 0;
 
     isSkystone() {
         if(!(block.red >= 0.01) && new Double(blockDistance.getDistance(DistanceUnit.INCH)) <= 2 && new Double(blockDistance.getDistance(DistanceUnit.INCH)) >= 0.5 ){
@@ -90,7 +90,7 @@ public class TeleOpFinal extends LinearOpMode {
     }
 
     rotate(int degrees){
-
+        // uhhhh
     }
 
     move(String direction, int inches){
@@ -189,61 +189,67 @@ public class TeleOpFinal extends LinearOpMode {
                     stage++;
                     break;
 
-            case 3: if(isSkystone()){
-                        stone1 = 1;
-                        stage++;
-                    } else {
-                        move("left", 8);
-                        if(isSkystone()){
-                            stone1 = 2;
-                            stage++;
-                        } else {
-                            move("left", 8);
+            case 3: int x = 1;
+                    while(stone1 == 0){
+                        if(x <= 5){
                             if(isSkystone()){
-                               stone1 = 3;
+                                stone1 = x;
                                 stage++;
                             } else {
                                 move("left", 8);
-                                if(isSkystone()){
-                                    stone1 = 4;
-                                    stage++;
-                                } else {
-                                    move("left", 8);
-                                    if(isSkystone()){
-                                        stone1 = 5;
-                                        stage++;
-                                    } else {
-                                        move("left", 8);
-                                        if(isSkystone()){
-                                            stone1 = 6;
-                                            stage++;
-                                        } else {
-                                            //skystones don't exist
-                                        }
-                                    }
-                                }
                             }
+                            x++;
+                        }
+                        else {
+                            move("right", 40);
+                            stage = 3;
                         }
                     }
-                    break;
-            case 4:
-                        break;
-        }
 
+            case 4: move("right", 5);
+                    rightFrontDrive.setTargetPosition(-1811); // 90 degrees, concerning the front left wheel
+                    rightRearDrive.setTargetPosition( -1811);
+                    intakeLeft.setPower(-1);
+                    intakeLeftBack.setPower(-1);
+                    intakeRight.setPower(1);
+                    intakeRightBack.setPower(1);
+                    move("forward", 2);
+                    intakeLeft.setPower(0);
+                    intakeLeftBack.setPower(0);
+                    intakeRight.setPower(0);
+                    intakeRightBack.setPower(0);
+                    stage++;
+                    break;
+            case 5: move("left", 12);
+                    move("backward", 30 + 4 + ((block1 - 1) * 8));
+                    leftFrontDrive.setTargetPosition(-1811); // 90 degrees, concerning the back right wheel
+                    leftRearDrive.setTargetPosition( -1811);
+                    move("backward", 2);
+                    leftGrab.setPosition(1); // Need to trial & error these into shape
+                    rightGrab.setPosition(0); 
+                    move("forward", 24);
+                    leftGrab.setPosition(0); // Need to trial & error these into shape
+                    rightGrab.setPosition(1); 
+                    move("right", 48);
+                    while(!(colors.red > colors.blue && colors.red > colors.green)){
+                        move("right", 1);
+                    }
+                    break;
+                }
+        /*
         if(colors.red > colors.blue && colors.red > colors.green){
             // Red Line
         } else if(colors.blue > colors.red && colors.blue > colors.green){
             // Blue Line
         } else if(colors.green > colors.red && colors.green > colors.blue){
             // Tiles
-        }
+        }*/
        
         i++; // inrease tick counter
    
         // Set Telemetry Data
         telemetry.addData("Tick Num", i); 
-        // That monstrosity below this line detects whether or not it sees a skystone, *as compared to a regular stone*; it has been known to give false positives with the wall and black objects
-        telemetry.addData("Skystone?", !(block.red >= 0.01) && new Double(blockDistance.getDistance(DistanceUnit.INCH)) <= 2 && new Double(blockDistance.getDistance(DistanceUnit.INCH)) >= 0.5 );
+        telemetry.addData("Stage", stage);
         telemetry.addData("Status", "Running");
         telemetry.update();
         }
