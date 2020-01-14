@@ -68,14 +68,6 @@ public class TeleOpFinal extends LinearOpMode {
     int ticks;
 
     int stage = 0;
-   
-        // Define Mecanum values
-    double RF; double LF; double RR; double LR; // Drive Speeds
-    double X1;            double X2; double Y2; // Joystick Values
-   
-        // Variables
-    double  tgtIntakePower     =     0; // Intake power variable
-    boolean plates             = false; // Whether or not the build plate movers are up or down
 
     int i = 0; // Tick counter for reference
 
