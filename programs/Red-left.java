@@ -82,7 +82,7 @@ public class TeleOpFinal extends LinearOpMode {
     }
 
     move(String direction, int inches){
-        ticks = inches/0.01656492242;
+        ticks = inches/0.01656492242; // circumference of wheel (in) / 560 encoder ticks per revolution
         switch(direction){
             case "forward":
                 leftFrontDrive.setTargetPosition(  ticks);
