@@ -89,10 +89,6 @@ public class TeleOpFinal extends LinearOpMode {
         }
     }
 
-    rotate(int degrees){
-        // uhhhh
-    }
-
     move(String direction, int inches){
         ticks = inches/0.01656492242;
         switch(direction){
@@ -101,6 +97,9 @@ public class TeleOpFinal extends LinearOpMode {
                 leftRearDrive.setTargetPosition(   ticks);
                 rightFrontDrive.setTargetPosition(-ticks);
                 rightRearDrive.setTargetPosition( -ticks);
+                while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                    sleep(0);
+                }
                 return true;
                 break;
             case "backward":
@@ -108,6 +107,9 @@ public class TeleOpFinal extends LinearOpMode {
                 leftRearDrive.setTargetPosition(  -ticks);
                 rightFrontDrive.setTargetPosition( ticks);
                 rightRearDrive.setTargetPosition(  ticks);
+                while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                    sleep(0);
+                }
                 return true;
                 break;
             case "left":
@@ -115,6 +117,9 @@ public class TeleOpFinal extends LinearOpMode {
                 leftRearDrive.setTargetPosition(  -ticks);
                 rightFrontDrive.setTargetPosition(-ticks);
                 rightRearDrive.setTargetPosition(  ticks);
+                while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                    sleep(0);
+                }
                 return true;
                 break;
             case "right":
@@ -122,6 +127,9 @@ public class TeleOpFinal extends LinearOpMode {
                 leftRearDrive.setTargetPosition(   ticks);
                 rightFrontDrive.setTargetPosition(-ticks);
                 rightRearDrive.setTargetPosition(  ticks);
+                while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                    sleep(0);
+                }
                 return true;
                 break;
             default: return false;
@@ -209,6 +217,9 @@ public class TeleOpFinal extends LinearOpMode {
             case 4: move("right", 5);
                     rightFrontDrive.setTargetPosition(-1811); // 90 degrees, concerning the front left wheel
                     rightRearDrive.setTargetPosition( -1811);
+                    while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                        sleep(0);
+                    }
                     intakeLeft.setPower(-1);
                     intakeLeftBack.setPower(-1);
                     intakeRight.setPower(1);
@@ -218,12 +229,18 @@ public class TeleOpFinal extends LinearOpMode {
                     intakeLeftBack.setPower(0);
                     intakeRight.setPower(0);
                     intakeRightBack.setPower(0);
+                    while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                        sleep(0);
+                    }
                     stage++;
                     break;
             case 5: move("left", 12);
                     move("backward", 30 + 4 + ((block1 - 1) * 8));
                     leftFrontDrive.setTargetPosition(-1811); // 90 degrees, concerning the back right wheel
                     leftRearDrive.setTargetPosition( -1811);
+                    while(leftFrontDrive.isBusy() || leftRearDrive.isBusy() || rightFrontDrive.isBusy() || rightRearDrive.isBusy()){
+                        sleep(0);
+                    }
                     move("backward", 2);
                     leftGrab.setPosition(1); // Need to trial & error these into shape
                     rightGrab.setPosition(0); 
