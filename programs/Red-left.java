@@ -244,7 +244,15 @@ public class TeleOpFinal extends LinearOpMode {
                     move("backward", 2);
                     leftGrab.setPosition(1); // Need to trial & error these into shape
                     rightGrab.setPosition(0); 
+                    intakeLeft.setPower(1);
+                    intakeLeftBack.setPower(1);
+                    intakeRight.setPower(-1);
+                    intakeRightBack.setPower(-1);
                     move("forward", 24);
+                    intakeLeft.setPower(0);
+                    intakeLeftBack.setPower(0);
+                    intakeRight.setPower(0);
+                    intakeRightBack.setPower(0);
                     leftGrab.setPosition(0); // Need to trial & error these into shape
                     rightGrab.setPosition(1); 
                     move("right", 48);
